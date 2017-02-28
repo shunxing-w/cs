@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width,height=device-height, user-scalable=no,initial-scale=1, minimum-scale=1, maximum-scale=1,target-densitydpi=device-dpi ">
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta name="apple-touch-fullscreen" content="yes">
+	<meta name="format-detection" content="telephone=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="x5-fullscreen" content="true">
+	<meta name="full-screen" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<title></title>
+	<style>
+		*{
+			margin: 0;
+			padding: 0;
+		}
+		body{
+			background-color: #f6f6f6;
+		}
+		header{
+			margin: 2rem auto;
+			font-size: 1rem;
+			text-align: center;
+
+		}
+		.mrn{
+			text-align: right;
+			width: 81%;
+			height:2.5rem;
+			font-size: 1.4rem;
+			line-height: 3rem;
+			-web-kit-appearance:none;
+			background:transparent;
+			border: 0px;
+			outline: none;
+			color: #ff690a;
+		}
+		.amount{
+			border-top: 2px solid #dfdbe3;
+			font-size: 0.8rem;
+			font-weight:900;
+			line-height: 40px;
+			background-color: white;
+			padding-left: 10px;
+		}
+		.btn{
+			height: 2.5rem;
+			width: 100%;
+
+			background-color: white ;
+			border-top: 1px solid #dfdbe3;
+			line-height: 2.5rem;
+			font-size: 0.8rem;
+			color: #dfdbe3;
+
+		}
+		.vip{
+			margin-top: 10px;
+			margin-right: 10px;
+			margin-left: 10px;
+			float: left;
+			width: 30px;
+			height: 20px;
+			line-height: 20px;
+
+			border: 1px solid #ff8205;
+			text-align: center;
+			border-radius: 5px;
+			color:#ff8205;
+			font-size: 12px;
+		}
+		.btn i{
+			float: right;
+			font-style: normal;
+			font-size: 1.5rem;
+
+		}
+		.submit{
+			-web-kit-appearance:none;
+			background:transparent;
+			border: 0px;
+			outline: none;
+			background: #c8c4cc;
+			color: white;
+			width: 80%;
+			height: 2.5rem;
+			text-align: center;
+			border-radius: 5px;
+		}
+		.sj1{
+			float: left;
+			background-color: #2bcd04;
+			color: white;
+			border-radius: 4px;
+			font-size: 12px;
+			width:70px;
+			height: 20px;
+			line-height: 20px;
+			text-align: center;
+
+		}
+		.sj2{
+			font-size: 14px;
+			float: right;
+			color: #8c8c8c;
+		}
+		.sj{
+			margin-top: 10px;
+			margin-bottom: 67px;
+			padding-left: 10px;
+			padding-right: 10px;
+		}
+		.tj{
+			text-align: center;
+			margin: 0 auto;
+		}
+		.intor{
+			background-color: #2bcd04;
+			color: white;
+		}
+	</style>
+</head>
+<script src="https://cdn.static.runoob.com/libs/jquery/1.10.2/jquery.min.js"></script>
+<body>
+<header>
+	<span>普通会员(6折)</span>
+	<span>充值余额:￥98.0</span>
+</header>
+<article>
+
+<p>京港超市</p>
+<div>
+	<from>
+		<div class="amount">付款金额<input id="pric" type="text" class="mrn" maxlength="5" placeholder="输入金额（元）" autofocus /></div>
+		<div class="btn"><div class="vip">VIP</div>本店支持会员充值 <i>></i></div>
+		<div class="sj"><div class="sj1">随机立减</div><div class="sj2">在支付时随机减免</div></div>
+		<input id="price" type="text"/>
+		<div class="tj"><input id="btn" type="submit"  value="立即支付" class="submit" /></div>
+
+	</from>
+</div>
+</article>
+<script>
+	$("#pric").focus(function(){
+		document.activeElement.blur();
+	});
+	$("#price").focus(function(){
+		document.activeElement.blur();
+	});
+
+	var btn=document.getElementById("btn");
+
+	$('.mrn').bind('input propertychange', function() {
+
+		if($('.mrn').val()==""){
+			$('#btn').css("backgroundColor","#dfdbe3");
+			$('#btn').val("立即支付")
+		}else{
+			$('#btn').css("backgroundColor","#2bcd04");
+			var text="微信支付"+$('.mrn').val()+"元";
+
+			var text2=$('.mrn').val();
+			$('#btn').val(text)
+			$('.mrn').val("")
+			$('.mrn').val(text2)
+		}
+
+	});
+</script>
+</body>
+</html>
