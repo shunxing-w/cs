@@ -17,7 +17,7 @@
 <script src="js/vue.js"></script>
 <body id="by">
 <div id="app">
-    <header>
+    <header v-if="userinfo.level">
         <span>{{level.level_name}}({{level.discount}}折)</span>
         <span>充值余额:￥{{userinfo.amount}}</span>
     </header>
@@ -30,11 +30,11 @@
                 <div class="pric">￥<i class="price" >{{price}}</i><span><i class="cursor ">|</i></span></div>
                 <span>随机立减</span>
             </div>
-            <div class="yh">
-                <div class="yhq">
-                   <span>优惠券</span> <p id="yhq" ></p>
+            <div class="yh" v-if="userinfo.couponlist || userinfo.vip">
+                <div class="yhq" v-if="userinfo.couponlist">
+                   <span>优惠券</span> <p id="yhq" >{{userinfo.shopinfo}}</p>
                 </div>
-                <div class="vip"><span>VIP</span>本店支持会员充值 </div>
+                <div class="vip" v-if="userinfo.vip"><span>VIP</span>本店支持会员充值 </div>
             </div>
 
             <div class="keyboard">
@@ -94,11 +94,20 @@
             },
             total:function(){
                 var total;
-                if(this.price>=this.condition){
-                    total=(this.price*this.level.discount/10-this.Coupon).toFixed(2);
+                if(this.level!=undefined){
+                    if(this.price>=this.condition){
+                        total=(this.price*this.level.discount/10-this.Coupon).toFixed(2);
+                    }else{
+                        total=(this.price*this.level.discount/10).toFixed(2);
+                    }
                 }else{
-                    total=(this.price*this.level.discount/10).toFixed(2);
+                    if(this.price>=this.condition){
+                        total=(this.price-this.Coupon).toFixed(2);
+                    }else{
+                        total=(this.price).toFixed(2);
+                    }
                 }
+
               return  total;
             }
         },
@@ -144,13 +153,11 @@
             payment:function(){
                 var price=parseInt($("#price").text());
                 var amount=this.userinfo.amount;
-                // console.log(amount)
-                //console.log(price);
                 if(this.price==0){
                     alert("输入金额必须大于0")
                 }
                 if(this.price<=amount){
-                        console.log(amount-price);
+                    console.log(amount-price);
                     this.price="0";
                 }
                 else{
@@ -171,8 +178,6 @@
     app.aymentp
     $(".payment").click(function(){
        var price=$("#price").text();
-    //    console.log(parseInt(price));
-
     });
     //光标闪烁动画
     var twinkle
