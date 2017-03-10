@@ -26,36 +26,36 @@
     <div>
         <form action="" method="get">
             <div class="amount">
-                <input  type="text" class="mrn" maxlength="10" placeholder="金额" readOnly="true"/>
-                <div class="pric">￥<i class="price">0</i><span><i class="cursor ">|</i></span></div>
+                <input  type="text" class="mrn" maxlength="10" placeholder="金额" readOnly="true"  onfocus="this.blur()"/>
+                <div class="pric">￥<i class="price" >{{price}}</i><span><i class="cursor ">|</i></span></div>
                 <span>随机立减</span>
             </div>
             <div class="yh">
                 <div class="yhq">
-                   <span>优惠券</span> <input type="text"  id="yhq" value="" readOnly="true"/> >
+                   <span>优惠券</span> <p id="yhq" ></p>
                 </div>
-                <div class="vip"><span>VIP</span>本店支持会员充值 <i>></i></div>
+                <div class="vip"><span>VIP</span>本店支持会员充值 </div>
             </div>
 
             <div class="keyboard">
                 <div class="number">
-                    <button type="button">1</button>
-                    <button type="button">2</button>
-                    <button type="button">3</button>
-                    <button type="button">4</button>
-                    <button type="button">5</button>
-                    <button type="button">6</button>
-                    <button type="button">7</button>
-                    <button type="button">8</button>
-                    <button type="button">9</button>
-                    <button type="button">00</button>
-                    <button type="button">0</button>
-                    <button type="button">.</button>
+                    <button type="button" v-on:click="button('1')">1</button>
+                    <button type="button" v-on:click="button('2')">2</button>
+                    <button type="button" v-on:click="button('3')">3</button>
+                    <button type="button" v-on:click="button('4')">4</button>
+                    <button type="button" v-on:click="button('5')">5</button>
+                    <button type="button" v-on:click="button('6')">6</button>
+                    <button type="button" v-on:click="button('7')">7</button>
+                    <button type="button" v-on:click="button('8')">8</button>
+                    <button type="button" v-on:click="button('9')">9</button>
+                    <button type="button" v-on:click="button('00')">00</button>
+                    <button type="button" v-on:click="button('0')">0</button>
+                    <button type="button" v-on:click="button('.')">.</button>
                 </div>
                 <div class="function">
-                    <button class="delete" type="button"></button>
+                    <button class="delete" type="button" v-on:click="delet"></button>
                     <a class="payment" href="javascript:;" v-on:click="payment">支付<br>
-                    <i id="price">0</i><br>元 </a>
+                    <i id="price">{{total}}</i><br>元 </a>
                 </div>
             </div>
         </form>
@@ -66,7 +66,7 @@
     <div class="coupon">
         <p class="title">选择优惠券</p>
         <ul>
-            <li v-for="coups in userinfo.couponlist">
+            <li v-for="coups in userinfo.couponlist" v-on:click="coupon(coups.condition,coups.price)">
                <span class="coupon_con">
                    {{coups.name}}优惠券
                    <i>满￥{{coups.condition}}可用</i>
@@ -83,32 +83,78 @@
         data: {
             userinfo:[],
             level:[],
+            price:"0",
             balance:0,
+            condition:0,
+            Coupon:0
         },
         computed:{
             aymentp:function(){
                 console.log(this.userinfo)
+            },
+            total:function(){
+                var total;
+                if(this.price>=this.condition){
+                    total=(this.price*this.level.discount/10-this.Coupon).toFixed(2);
+                }else{
+                    total=(this.price*this.level.discount/10).toFixed(2);
+                }
+              return  total;
             }
         },
         // doem事件在 `methods` 对象中定义方法
         methods: {
+            button:function(number){
+                var re = /.*\..*/;
+                var price = $(".price").text();
+                var current =number;
+                if(this.price=='0'){
+                    console.log(123)
+                    if(current == '0' || current == '00'){
+                        return;
+                    }
+                    if(current == '.'){
+                        this.price+=current;
+                    }else{
+                        this.price=current;
+                    }
+                }else if(re.test(this.price) && current == '.'){
+                    console.log(1)
+                    return;
+                }else{
+                    this.price+=current;
+                    console.log( this.price)
+                }
+            },
+            //删除功能键
+            delet:function(){
+                var str= this.price;
+                var newstr=str.substring(0,str.length-1);
+                if(newstr == ''){
+                    newstr = '0';
+                }
+              this.price=newstr;
+            },
+            //优惠券选择
+            coupon:function(condition,price){
+                $("#yhq").html("-￥"+price);
+                this.Coupon=price;
+                this.condition=condition;
+            },
             payment:function(){
                 var price=parseInt($("#price").text());
                 var amount=this.userinfo.amount;
                 // console.log(amount)
                 //console.log(price);
-                if(price==0){
+                if(this.price==0){
                     alert("输入金额必须大于0")
                 }
-                if(price<=amount){
+                if(this.price<=amount){
                         console.log(amount-price);
-                    $(".price").text(0);
-                    $("#price").text(0);
+                    this.price="0";
                 }
                 else{
-                    $(".price").text(0);
-                    $("#price").text(0);
-                    console.log(price);
+                    this.price="0";
                 }
 
             }
@@ -144,41 +190,6 @@
         startTimer();
         console.log(111111);
     });
-    //数字键盘点击事件
-    $(".number").on("click", "button", function () {
-        var num="";
-        var re = /.*\..*/;
-        var price = $(".price").text();
-        var current = $(this).text();
-        if(price == '0'){
-            if(current == 0 || current == '00'){
-                return;
-            }
-            if(current == '.'){
-                $(".price").append(current);
-                $("#price").append(current);
-            }else{
-                $(".price").text(current);
-                $("#price").text(current);
-            }
-        }else if(re.test(price) && current == '.'){
-            return;
-        }else{
-            $(".price").append(current);
-            $("#price").append(current);
-        }
-    });
-
-    //    删除功能键
-    $(".delete").click(function(){
-        var str= $(".price").text()
-        var newstr=str.substring(0,str.length-1);
-        if(newstr == ''){
-            newstr = '0';
-        }
-        $(".price").html(newstr);
-        $("#price").html(newstr)
-    });
     //    点击优惠券打开优惠券弹窗
     $(".yhq").click(function(e){
         $("#masking").show()
@@ -195,18 +206,65 @@
         });
 
 
-    $("#by").click(function(e){ clearInterval(twinkle);
+    $("#by").click(function(e){
+        clearInterval(twinkle);
 
     });
     //点击优惠券
     $(".coupon").on("click","li",function(){
-        console.log(1)
-        $("#yhq").val("-"+$(this).find(".coupon_pric").text());
+       // console.log(1)
+
+        //$("#yhq").html("-"+$(this).find(".coupon_pric").text());
         $("#masking").hide();
         $(this).siblings('li').removeClass('liys');
         $(this).addClass("liys");
     });
+    //数字键盘点击事件
+    /*    $(".number").on("click", "button", function () {
+     var num="";
+     var re = /.*\..*!/;
+     var price = $(".price").text();
+     var current = $(this).text();
+     if(price == '0'){
+     if(current == 0 || current == '00'){
+     return;
+     }
+     if(current == '.'){
+     $(".price").append(current);
+     var prics= parseInt($(".price").text());
+     var level= parseInt($(".level").text());
+     var yhq=parseInt($("#yhq").text());
+     var total= prics*level/10;
+     $("#price").html(total);
+     }else{
+     $(".price").text(current);
+     $("#price").text(current);
+     }
+     }else if(re.test(price) && current == '.'){
+     return;
+     }else{
+     $(".price").append(current);
+     var prics= parseInt($(".price").text());
+     var level= parseInt($(".level").text());
+     var src=$("#yhq").val();
+     var yhjprc=src.replace(/[^0-9]/ig,"");
+     var yhq=parseInt(yhjprc);
+     console.log(yhq)
+     var total= prics*level/10;
+     $("#price").html(total);
+     }
+     });*/
 
+    //    删除功能键
+    //    $(".delete").click(function(){
+    //        var str= $(".price").text()
+    //        var newstr=str.substring(0,str.length-1);
+    //        if(newstr == ''){
+    //            newstr = '0';
+    //        }
+    //        $(".price").html(newstr);
+    //        $("#price").html(newstr)
+    //    });
 </script>
 </body>
 <script>
