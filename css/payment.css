@@ -80,12 +80,13 @@ article p{
     font-size: 16px;
     float: left;
 }
-.yh input{
-    border:none;
-    outline: none;
+.yh #yhq{
+    line-height: 1.6rem;
+    width: 10rem;
+    float: left;
     font-size: 12pt;
     text-align: right;
-    height: 1rem;
+    height: 1.6rem;
 }
 .yh{
     border: 1px solid #cccccc;
@@ -98,13 +99,17 @@ article p{
     padding: 0 0.4rem;
     height: 1.6rem;
     line-height: 1.6rem;
+    background: url("../image/jt.png") no-repeat right;
+    background-size: 4%;
     border-bottom: 1px solid #ccc;
 }
 .vip{
-    padding: 0 0.4rem;
+    padding: 0 0.8rem 0 0.4rem;
     text-align: right;
     height: 1.6rem;
     line-height: 1.6rem;
+    background: url("../image/jt.png") no-repeat right;
+    background-size: 4%;
 }
 .vip span{
     float: left;
@@ -229,7 +234,6 @@ article p{
 }
 @media (min-height:480px) and (max-height:600px)  {
     header {
-
         height: 1.4rem;
         font-size: 12px;
         padding: 0 0.4rem;
