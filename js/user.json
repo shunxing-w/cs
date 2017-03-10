@@ -6,15 +6,15 @@
       "level":{"level_id":1,"level_name":"普通会员","discount":"6"},
       "amount":"98.0",
       "surpport_random_discount":"true",
-      "vip":{"url":"http://www.weiwoju","vipstatue":"true"},
+      "vip":"http://www.weiwoju",
       "couponlist":[
-        {"id":1, "name":"38妇女节","condition":"50","price":13},
-        {"id":2, "name":"61儿童节","condition":"100","price":12},
-        {"id":3, "name":"春节","condition":"80","price":11},
-        {"id":1, "name":"38妇女节","condition":"50","price":13},
-        {"id":2, "name":"61儿童节","condition":"100","price":12},
-        {"id":1, "name":"38妇女节","condition":"50","price":13},
-        {"id":2, "name":"61儿童节","condition":"100","price":12}
+        {"id":1, "name":"38妇女节","condition":50,"price":13},
+        {"id":2, "name":"61儿童节","condition":100,"price":12},
+        {"id":3, "name":"春节","condition":80,"price":11},
+        {"id":1, "name":"38妇女节","condition":50,"price":13},
+        {"id":2, "name":"61儿童节","condition":100,"price":12},
+        {"id":1, "name":"38妇女节","condition":50,"price":13},
+        {"id":2, "name":"61儿童节","condition":100,"price":12}
       ]
     }
   ]
