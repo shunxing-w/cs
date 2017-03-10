@@ -31,8 +31,8 @@
                 <span>随机立减</span>
             </div>
             <div class="yh" v-if="userinfo.couponlist || userinfo.vip">
-                <div class="yhq" v-if="userinfo.couponlist">
-                   <span>优惠券</span> <p id="yhq" >{{userinfo.shopinfo}}</p>
+                <div class="yhq" v-if="userinfo.couponlist" v-on:click="yhq">
+                   <span>优惠券</span> <p id="yhq" ></p>
                 </div>
                 <div class="vip" v-if="userinfo.vip"><span>VIP</span>本店支持会员充值 </div>
             </div>
@@ -113,6 +113,7 @@
         },
         // doem事件在 `methods` 对象中定义方法
         methods: {
+            //数字键
             button:function(number){
                 var re = /.*\..*/;
                 var price = $(".price").text();
@@ -144,12 +145,19 @@
                 }
               this.price=newstr;
             },
+            //点击优惠券打开优惠券弹窗
+            yhq:function(){
+                $("#masking").show()
+                stopTimer();
+                $(".cursor").hide();
+            },
             //优惠券选择
             coupon:function(condition,price){
                 $("#yhq").html("-￥"+price);
                 this.Coupon=price;
                 this.condition=condition;
             },
+            // 支付按钮
             payment:function(){
                 var price=parseInt($("#price").text());
                 var amount=this.userinfo.amount;
@@ -175,32 +183,21 @@
         console.log(res[0].user[0].couponlist);
 
     });
-    app.aymentp
-    $(".payment").click(function(){
-       var price=$("#price").text();
-    });
     //光标闪烁动画
     var twinkle
-    function  startTimer(){
         twinkle=setInterval(function(){
             $(".cursor").toggle()
         },900);
-    };
     function stopTimer()
     {
        clearInterval(twinkle);
     }
-    startTimer();
     $(".amount").click(function(){
-        startTimer();
-        console.log(111111);
-    });
-    //    点击优惠券打开优惠券弹窗
-    $(".yhq").click(function(e){
-        $("#masking").show()
-        stopTimer();
-//        clearInterval(twinkle);
-        $(".cursor").hide();
+        $(".cursor").css("display","block");
+        twinkle=setInterval(function(){
+            $(".cursor").toggle();
+        },900);
+
     });
     //    点击内容以外隐藏优惠券
     $("#masking").click(function(e){
@@ -213,13 +210,10 @@
 
     $("#by").click(function(e){
         clearInterval(twinkle);
-
+        $(".cursor").css("display","none");
     });
     //点击优惠券
     $(".coupon").on("click","li",function(){
-       // console.log(1)
-
-        //$("#yhq").html("-"+$(this).find(".coupon_pric").text());
         $("#masking").hide();
         $(this).siblings('li').removeClass('liys');
         $(this).addClass("liys");
