@@ -15,6 +15,12 @@
 <script src="js/jquery-1.8.3.min.js"></script>
 <script src="js/rem.js"></script>
 <script src="js/vue.js"></script>
+<script src="js/fastclick.js"></script>
+<script>
+    $(function() {
+        FastClick.attach(document.body);
+    });
+</script>
 <body id="by">
 <div id="app">
     <header v-if="userinfo.level">
@@ -32,7 +38,7 @@
             </div>
             <div class="yh" v-if="userinfo.couponlist || userinfo.vip">
                 <div class="yhq" v-if="userinfo.couponlist" v-on:click="yhq">
-                   <span>优惠券</span> <p id="yhq" ></p>
+                   <span>优惠券</span> <p id="yhq" >{{coupon_pric}}</p>
                 </div>
                 <div class="vip" v-if="userinfo.vip"><span>VIP</span>本店支持会员充值 </div>
             </div>
@@ -55,7 +61,7 @@
                 <div class="function">
                     <button class="delete" type="button" v-on:click="delet"></button>
                     <a class="payment" href="javascript:;" v-on:click="payment">支付<br>
-                    <i id="price">{{total}}</i><br>元 </a>
+                    <i id="price">{{total}}</i>元</a>
                 </div>
             </div>
         </form>
@@ -66,12 +72,13 @@
     <div class="coupon">
         <p class="title">选择优惠券</p>
         <ul>
-            <li v-for="coups in userinfo.couponlist" v-on:click="coupon(coups.condition,coups.price)">
+            <li v-bind:class="{ style_bac1: isActive, 'style_bac2':price>=coups.condition}" v-for="(coups,index) in userinfo.couponlist" :data-id="coups.id" v-on:click="coupon(coups.condition,coups.price,price>=coups.condition,index)">
                <span class="coupon_con">
                    {{coups.name}}优惠券
                    <i>满￥{{coups.condition}}可用</i>
                </span>
-                <i class="coupon_pric">￥{{coups.price}}</i>
+                <i class=" coupon_pric" v-bind:class="{ coupon_pric1: isActive, 'coupon_pric2':price>=coups.condition}">￥{{coups.price}}</i>
+                <!--<i class="coupon_pric">￥{{coups.price}}</i>-->
             </li>
         </ul>
     </div>
@@ -86,41 +93,56 @@
             price:"0",
             balance:0,
             condition:0,
-            Coupon:0
+            isActive: true,
+            couponlist:[],
+            coupon_pric:"",
+            coupon_price:0,
+            Coupon:null,
         },
         computed:{
-            aymentp:function(){
-                console.log(this.userinfo)
-            },
             total:function(){
                 var total;
                 if(this.level!=undefined){
                     if(this.price>=this.condition){
-                        total=(this.price*this.level.discount/10-this.Coupon).toFixed(2);
+                        total=(this.price*this.level.discount/10-this.coupon_price).toFixed(2);
                     }else{
                         total=(this.price*this.level.discount/10).toFixed(2);
                     }
                 }else{
                     if(this.price>=this.condition){
-                        total=(this.price-this.Coupon).toFixed(2);
+                        total=(this.price-this.coupon_price).toFixed(2);
                     }else{
                         total=(this.price).toFixed(2);
                     }
                 }
-
               return  total;
-            }
+            },
         },
         // doem事件在 `methods` 对象中定义方法
         methods: {
-            //数字键
+            aymentp:function(){
+                if(this.Coupon!=null){
+                    var current_coupon = this.couponlist[this.Coupon];
+                    console.log(this.Coupon);
+                    if(this.price>=current_coupon.condition){
+                        this.coupon_pric = "-￥"+current_coupon.price;
+                    }else{
+                        this.coupon_pric="";
+                        this.coupon_price=0;
+                        this.Coupon=null;
+                    }
+                }
+
+            },
+            //点击数字键
             button:function(number){
                 var re = /.*\..*/;
+                var reg=/^[1-9]{1}\d*(\.\d{1,2})?$/;
                 var price = $(".price").text();
                 var current =number;
                 if(this.price=='0'){
-                    console.log(123)
                     if(current == '0' || current == '00'){
+                        console.log(123)
                         return;
                     }
                     if(current == '.'){
@@ -131,9 +153,10 @@
                 }else if(re.test(this.price) && current == '.'){
                     console.log(1)
                     return;
+                }else if(reg.test(this.price)&&re.test(this.price)&&this.price.toString().split(".")[1].length==2){
+                   return;
                 }else{
                     this.price+=current;
-                    console.log( this.price)
                 }
             },
             //删除功能键
@@ -143,7 +166,8 @@
                 if(newstr == ''){
                     newstr = '0';
                 }
-              this.price=newstr;
+                this.price=newstr;
+                this.aymentp()
             },
             //点击优惠券打开优惠券弹窗
             yhq:function(){
@@ -152,10 +176,14 @@
                 $(".cursor").hide();
             },
             //优惠券选择
-            coupon:function(condition,price){
-                $("#yhq").html("-￥"+price);
-                this.Coupon=price;
-                this.condition=condition;
+            coupon:function(condition,price,state,index){
+                if(state==true){
+                    this.coupon_pric="-￥"+price;
+//                    $("#yhq").html("-￥"+price);
+                    this.coupon_price=price;
+                    this.Coupon=index;
+                    this.condition=condition;
+                }
             },
             // 支付按钮
             payment:function(){
@@ -171,20 +199,17 @@
                 else{
                     this.price="0";
                 }
-
-            }
+            },
         }
     });
 
     $.getJSON('js/user.json', function(res){
         app.userinfo=res[0].user[0];
         app.level=res[0].user[0].level;
-        console.log(res[0].user[0].level)
-        console.log(res[0].user[0].couponlist);
-
+        app.couponlist=res[0].user[0].couponlist;
     });
     //光标闪烁动画
-    var twinkle
+    var twinkle;
         twinkle=setInterval(function(){
             $(".cursor").toggle()
         },900);
@@ -206,8 +231,6 @@
                 $(this).hide();
             }
         });
-
-
     $("#by").click(function(e){
         clearInterval(twinkle);
         $(".cursor").css("display","none");
@@ -218,52 +241,6 @@
         $(this).siblings('li').removeClass('liys');
         $(this).addClass("liys");
     });
-    //数字键盘点击事件
-    /*    $(".number").on("click", "button", function () {
-     var num="";
-     var re = /.*\..*!/;
-     var price = $(".price").text();
-     var current = $(this).text();
-     if(price == '0'){
-     if(current == 0 || current == '00'){
-     return;
-     }
-     if(current == '.'){
-     $(".price").append(current);
-     var prics= parseInt($(".price").text());
-     var level= parseInt($(".level").text());
-     var yhq=parseInt($("#yhq").text());
-     var total= prics*level/10;
-     $("#price").html(total);
-     }else{
-     $(".price").text(current);
-     $("#price").text(current);
-     }
-     }else if(re.test(price) && current == '.'){
-     return;
-     }else{
-     $(".price").append(current);
-     var prics= parseInt($(".price").text());
-     var level= parseInt($(".level").text());
-     var src=$("#yhq").val();
-     var yhjprc=src.replace(/[^0-9]/ig,"");
-     var yhq=parseInt(yhjprc);
-     console.log(yhq)
-     var total= prics*level/10;
-     $("#price").html(total);
-     }
-     });*/
-
-    //    删除功能键
-    //    $(".delete").click(function(){
-    //        var str= $(".price").text()
-    //        var newstr=str.substring(0,str.length-1);
-    //        if(newstr == ''){
-    //            newstr = '0';
-    //        }
-    //        $(".price").html(newstr);
-    //        $("#price").html(newstr)
-    //    });
 </script>
 </body>
 <script>
