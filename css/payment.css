@@ -4,7 +4,7 @@
     list-style: none;
     font-style: normal;
     font-family: "Microsoft YaHei", Verdana, Arial, sans-serif, "Times New Roman";
-        -webkit-touch-callout:none;  /*系统默认菜单被禁用*/
+    -webkit-touch-callout:none;  /*系统默认菜单被禁用*/
     -webkit-user-select:none; /*webkit浏览器*/
     -khtml-user-select:none; /*早期浏览器*/
     -moz-user-select:none;/*火狐*/
@@ -235,10 +235,29 @@ article p{
     color: #FF6636;
     font-size: 12pt;
 }
-.liys{
-    background-color: #f1eff5;
+.style_bac1{
+  color: #b7b6ba;
 }
-@media (min-height:480px) and (max-height:560px)  {
+.style_bac2{
+   color: #000;
+}
+.coupon_pric1{
+    color: #b7b6ba;
+    text-decoration: line-through;/*横线*/
+}
+.coupon_pric2{
+    color: #FF6636;
+    text-decoration: none;
+}
+#price{
+    width: 3.6rem;
+    display: block;
+    vertical-align: middle;
+    word-wrap:break-word;
+}
+/*.liys{}*/
+
+@media (min-height:480px) and (max-height:600px)  {
     header {
         height: 1.4rem;
         font-size: 12px;
