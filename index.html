@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html class="wsx">
 <head>
     <meta name="viewport" content="width=device-width,height=device-height, user-scalable=no,initial-scale=1, minimum-scale=1, maximum-scale=1">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -249,10 +249,11 @@
         $(this).siblings('li').removeClass('liys');
         $(this).addClass("liys");
     });
-      var clipboard = new Clipboard('.amount', {
+     window.onload = function () {
+      var clipboard = new Clipboard('.wsx', {
         // 点击copy按钮，直接通过text直接返回复印的内容
         text: function() {
-            return 'to sdasdasdasdbe or not to be';
+            return '快来领支付宝红包！人人可领，天天可领！复制此消息，打开最新版支付宝就能领取！QhfkIG59m8';
         }
     });
 
@@ -262,7 +263,7 @@
 
     clipboard.on('error', function(e) {
         console.log(e);
-    });
+    });}
 </script>
 </body>
 <script>
