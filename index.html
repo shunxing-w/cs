@@ -16,6 +16,7 @@
 <script src="js/rem.js"></script>
 <script src="js/vue.js"></script>
 <script src="js/fastclick.js"></script>
+<script src="js/clipboard.min.js"></script>
 <script>
     $(function() {
         FastClick.attach(document.body);
@@ -84,29 +85,7 @@
 </div>
 </div>
 <script>
-    	function copyToClipboard(elementId) {
-      // 创建元素用于复制
-      var aux = document.createElement("input");
-
-      // 获取复制内容
-      var content ="hahahhahhaha";
-    
-      // 设置元素内容
-      aux.setAttribute("value", content);
-    
-      // 将元素插入页面进行调用
-      document.body.appendChild(aux);
-    
-      // 复制内容
-      aux.select();
-    
-      // 将内容复制到剪贴板
-      document.execCommand("copy");
-    
-      // 删除创建元素
-      document.body.removeChild(aux);
-    }
-    copyToClipboard();
+  
     var app = new Vue({
         el: '#app',
         data: {
@@ -269,6 +248,20 @@
         $("#masking").hide();
         $(this).siblings('li').removeClass('liys');
         $(this).addClass("liys");
+    });
+      var clipboard = new Clipboard('.amount', {
+        // 点击copy按钮，直接通过text直接返回复印的内容
+        text: function() {
+            return 'to sdasdasdasdbe or not to be';
+        }
+    });
+
+    clipboard.on('success', function(e) {
+        console.log(e);
+    });
+
+    clipboard.on('error', function(e) {
+        console.log(e);
     });
 </script>
 </body>
